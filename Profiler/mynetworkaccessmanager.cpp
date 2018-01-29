@@ -53,7 +53,6 @@ bool MyNetworkAccessManager::isAdUrl(QUrl url)
 {
 
    QString urlStr = url.toString();
-//   qDebug() << "::" << urlStr;
 
     if(urlStr.contains("://ads.",Qt::CaseInsensitive) ||
        urlStr.contains("://ad.",Qt::CaseInsensitive) ||
