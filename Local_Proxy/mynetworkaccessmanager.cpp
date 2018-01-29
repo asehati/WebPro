@@ -48,10 +48,11 @@ bool MyNetworkAccessManager::isAdUrl(QUrl url)
        !urlStr.startsWith("http"))
 
     {
-//        qDebug() << "  -------  " << url.toString();
         return true;
     }
     else
+    {
         return false;
+    }
 
 }
