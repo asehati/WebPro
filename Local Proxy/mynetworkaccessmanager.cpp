@@ -1,5 +1,4 @@
 #include "mynetworkaccessmanager.h"
-//#include "networkreplyproxy.h"
 
 MyNetworkAccessManager::MyNetworkAccessManager(QObject *parent) :
     QNetworkAccessManager(parent)
@@ -20,7 +19,6 @@ QNetworkReply *MyNetworkAccessManager::createRequest(QNetworkAccessManager::Oper
     {
         myReq.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferCache);
         myReq.setAttribute(QNetworkRequest::CacheSaveControlAttribute, true);
-//        myReq.setHeader(QNetworkRequest::UserAgentHeader,"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0");
         QNetworkReply * newRep = QNetworkAccessManager::createRequest(op, myReq, outgoingData);
         return newRep;
     }
