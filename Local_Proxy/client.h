@@ -75,7 +75,6 @@ private slots:
     void readData();
     void objectLoadFinished(QNetworkReply *);
     void pageLoadFinished(bool k);
-//    void timeOutHandler();
 
 private:
 
@@ -94,7 +93,6 @@ private:
     QSet<QUrl> cacheHit_urls;
     bool done;
     int objCounter;
-//    QTimer timeOut;
 
     QTime timer;
 
