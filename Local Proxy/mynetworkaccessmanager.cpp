@@ -1,4 +1,4 @@
-#include "mynetworkaccessmanager.h"
+#include "myNetworkAccessManager.h"
 
 MyNetworkAccessManager::MyNetworkAccessManager(QObject *parent) :
     QNetworkAccessManager(parent)
