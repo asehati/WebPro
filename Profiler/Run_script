@@ -1,0 +1,17 @@
+#!/bin/bash
+rm batch*.tar
+rm -r batch*
+rm *.*~
+rm *Statics*
+clear
+
+urlList=('http://www.cnn.com' 'http://www.nytimes.com' 'http://www.cbc.ca' 'http://www.bbc.com' 'http://espn.go.com' 'http://www.mozilla.org/en-US/' 'http://www.walmart.ca' 'http://www.ikea.com/ca/en/' 'http://www.ebay.ca' 'http://www.shaw.ca/store/' 'http://www.msn.com' 'http://www.microsoft.com/en-us/default.aspx' 'http://www.deviantart.com' 'http://www.apple.com' 'http://www.flickr.com' 'http://ca.ign.com' 'http://en.wikipedia.org/wiki/Calgary' 'http://www.cbssports.com' 'http://www.tripadvisor.ca' 'http://www.about.com');
+
+while true; do	
+	sleep 3600
+
+	for i in "${urlList[@]}"
+	do 
+		./Profiler $i
+	done	
+done
