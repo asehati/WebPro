@@ -105,6 +105,9 @@ void Client::connectToServer()
 
 /**
 	A slot that is called every time a data is received from remote proxy.
+	The first 4 bytes indicate the size of the bundle
+	After receiving the entire bundle, it extracts the bundle and invokes 
+	web engine to load the page
 */
 void Client::readData()
 {

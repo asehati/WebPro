@@ -1,7 +1,7 @@
 /**
     A customized network access manager class. Implementing this class enables  
     local proxy to serve most objects from cache. Those objects that are missing
-	in the bundle (cache) will be fetched directly from remote servers.
+    in the bundle (cache) will be fetched directly from remote servers.
     Implementing this class also enables proxy to avoid loading advertisement urls
 	
     @author Ali Sehati
