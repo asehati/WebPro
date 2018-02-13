@@ -1,7 +1,7 @@
 /**
-    A customized network access manager class. This class alows to prevent 
-    loading objects from cache and also to block adverisement urls from being 
-    loaded and recorded in the resource file
+    A customized network access manager class. Implementing this class enables  
+    profiler to prevent loading objects from cache and also to block adverisement 
+    loaded and recorded in the resource file urls from being 
     
     @author Ali Sehati
     @version 1.1

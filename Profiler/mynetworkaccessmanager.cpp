@@ -1,7 +1,7 @@
 /**
-    A customized network access manager class. This class alows to prevent 
-    loading objects from cache and also to block adverisement urls from being 
-    loaded and recorded in the resource file
+    A customized network access manager class. Implementing this class enables  
+    profiler to prevent loading objects from cache and also to block adverisement 
+    loaded and recorded in the resource file urls from being 
     
     @author Ali Sehati
     @version 1.1
@@ -17,7 +17,7 @@ MyNetworkAccessManager::MyNetworkAccessManager(QObject *parent) :
 
 /**
 	Over-riding this method allows us to customize the HTTP request that will be issued 
-	by the profiler. This customization includes preventing load from cache and also block Ad urls
+	by the profiler. This customization includes preventing load from cache and also blocking Ad urls
 */
 QNetworkReply *MyNetworkAccessManager::createRequest(QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *outgoingData)
 {

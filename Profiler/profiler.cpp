@@ -90,8 +90,8 @@ void Profiler::setUrl(const QString &value)
 }
 
 /**
-	A Qt slot that is called every time the HTTP response for one object is received 
-	The program takes the URL of the received object and records it in the associated resource file
+	A Qt slot that is called every time the HTTP response for one object is received. 
+	This function takes the URL of the received object and records it in the resource file
 	
 	@param reply contains the information associated with the completed HTTP request-response transaction
 */
@@ -134,8 +134,10 @@ void Profiler::replyFinished(QNetworkReply *reply)
 
 /**
 	A Qt slot that is called every time the entire page load is finished
+	
+	@param status Indicates whether page load was successful
 */
-void Profiler::pageLoadFinished(bool k)
+void Profiler::pageLoadFinished(bool status)
 {
     webpage.settings()->setAttribute(QWebSettings::JavascriptEnabled,false);
 

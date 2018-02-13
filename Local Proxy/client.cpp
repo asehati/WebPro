@@ -1,42 +1,12 @@
-/****************************************************************************
-**
-** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
-** Contact: http://www.qt-project.org/legal
-**
-** This file is part of the examples of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:BSD$
-** You may use this file under the terms of the BSD license as follows:
-**
-** "Redistribution and use in source and binary forms, with or without
-** modification, are permitted provided that the following conditions are
-** met:
-**   * Redistributions of source code must retain the above copyright
-**     notice, this list of conditions and the following disclaimer.
-**   * Redistributions in binary form must reproduce the above copyright
-**     notice, this list of conditions and the following disclaimer in
-**     the documentation and/or other materials provided with the
-**     distribution.
-**   * Neither the name of Digia Plc and its Subsidiary(-ies) nor the names
-**     of its contributors may be used to endorse or promote products derived
-**     from this software without specific prior written permission.
-**
-**
-** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-** OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
+/**
+    The client program which implements local proxy.
+    It forwards the first request to remote proxy, waits to receive the bundle from remote proxy,
+    then serves all the subsequent requests from objects in the bundle. Missing objects in the bundle,
+    are fetched directly from remote web-servers.
+    
+    @author Ali Sehati
+    @version 1.1
+*/
 
 #include <QtNetwork>
 
@@ -56,9 +26,7 @@ Client::Client(QObject *parent)
             this, SLOT(displayError(QAbstractSocket::SocketError)));
 
     done = false;
-    bytesWritten = 0;
-    blockSize = 0;
-    objCounter = 0;
+    bytesWritten = blockSize = 0;
 
     cacheHit_urls.clear();
 
@@ -87,22 +55,43 @@ Client::Client(QObject *parent)
     out.setRealNumberPrecision(6);
 }
 
+/**
+	Sets the url that the browser wants to visit
+	
+	@param value the url to be visited by the browser
+*/
+void Client::setUrl(const QString &value)
+{
+    url = value;
+}
+
+/**
+	Set and open the log file that is going to hold timing information
+	
+	@param value name of the log file
+*/
 void Client::setStatFileName(const QString &value)
 {
     statFile.setFileName(value);
     statFile.open(QIODevice::Append);
 }
 
-
+/**
+	Creates an HTTP request with the user-requested url and sends it to the remote proxy
+*/
 void Client::connectToServer()
-{
+{	 
+	const QString IP_ADDRESS = "136.159.7.120"; //public IP address of the remote proxy
+	const int PORT = 8801;	//port number where proxy process is listening
+	
     QString request = "GET ";
     request.append(url);
     request.append(" HTTP 1.1\r\n\r\n");
 
     timer.start();
 
-    tcpSocket->connectToHost("136.159.7.120",8801); //"192.168.20.147"
+    tcpSocket->connectToHost(IP_ADDRESS,PORT); 
+	
     if(tcpSocket->waitForConnected()) // putting 1 as parameter isn't reasonable, using default 3000ms value
     {
         tcpSocket->write(request.toUtf8().data());
@@ -114,6 +103,9 @@ void Client::connectToServer()
     }
 }
 
+/**
+	A slot that is called every time a data is received from remote proxy.
+*/
 void Client::readData()
 {
 
@@ -147,13 +139,18 @@ void Client::readData()
     }
 }
 
-
+/**
+	A Qt slot that is called every time the HTTP response for one object is received.
+	The program takes the URL of the received object and records it in the associated resource file
+	
+	@param reply contains the information associated with the completed HTTP request-response transaction
+*/
 void Client::objectLoadFinished(QNetworkReply *reply)
 {
     objCounter++;
 
-//    if(done)
-//        return;
+    if(done)
+        return;
 
     QUrl current_url = reply->request().url();
 
@@ -164,70 +161,43 @@ void Client::objectLoadFinished(QNetworkReply *reply)
 
     QVariant fromCache = reply->attribute(QNetworkRequest::SourceIsFromCacheAttribute);
 
-//    QVariant isRevalid = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-//    if(isRevalid.isValid())
-//    {
-//        int status = isRevalid.toInt();
-//        QString reason = reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
-//        qDebug() << "Status:  " << status << "  reason:  " << reason;
-//    }
-
     if(fromCache.toBool())
     {
         cacheHit_urls.insert(current_url);
     }
-
-    if(objCounter == 5)
-    {
-        int loadTime = timer.elapsed();
-        qDebug("Time elapsed in page load: %f ms", (double)loadTime / 1000);
-        qDebug() << "Cache Hit #: " << cacheHit_urls.size();
-//        out << (float)loadTime / 1000 << "\t";
-         out << (float)loadTime << "\t";
-        out.flush();
-
-        statFile.close();
-
-        QCoreApplication::exit(0);
-    }
 }
 
-void Client::pageLoadFinished(bool k)
-{
-    if(k)
-        qDebug() << "--------------------- in page load finished -----------------------";
-}
-
-/*void Client::pageLoadFinished(bool k)
+/**
+	A Qt slot that is called every time the entire page load is finished
+	The call of this function also triggers stopping the timer that measures 
+	page load time. The time value is written to a log file
+	
+	@param status Indicates whether page load process was successful
+*/
+void Client::pageLoadFinished(bool status)
 {
     webpage.settings()->setAttribute(QWebSettings::JavascriptEnabled,false);
 
     if(done)
         return;
 
-//    timeOut.stop();
-
     done = true;
     int loadTime = timer.elapsed();
-    qDebug() << "--------------------- in page load finished -----------------------";
+   
     qDebug("Time elapsed in page load: %f ms", (double)loadTime / 1000);
     qDebug() << "Cache Hit #: " << cacheHit_urls.size();
     out << (float)loadTime / 1000 << "\t";
     out.flush();
 
-//    qDebug() << "++++++++++++++++++++++++++++++++++++++++";
-//    qDebug() << webpage.mainFrame()->toPlainText();
-
     QCoreApplication::exit(0);
-}*/
-
-
-void Client::setUrl(const QString &value)
-{
-    url = value;
 }
 
 
+/**
+	Extracts the tar file that holds the bundle received from remote proxy.
+	
+	@param batchName Name of the tar file that contains the bundle
+*/
 void Client::extractTar(const char * batchName)
 {
     TAR *pTar;
@@ -245,7 +215,6 @@ void Client::extractTar(const char * batchName)
         return;
     }
 
-//    errno = close(tar_fd(pTar));
     errno = tar_close(pTar);
     if ( errno != 0){
         fprintf(stderr,"tar_close(): %s\n",strerror(errno));
@@ -253,6 +222,10 @@ void Client::extractTar(const char * batchName)
     }
 }
 
+/**
+	The client proxy starts loading the page. Most objects will be served from the received bundle.
+	The ones missing in the bundle will be fetched from remote web servers
+*/
 void Client::loadPage()
 {
     webpage.settings()->clearMemoryCaches();
@@ -262,7 +235,12 @@ void Client::loadPage()
     webpage.mainFrame()->load(QUrl(url));
 }
 
-
+/**
+	Set up and open the batch file that will be used to write the received bundle from remote proxy
+	"file" is the handle that will be used to work with this file
+	
+	@param batchName Name of the batch file that will hold the received page bundle
+*/
 void Client::fileSetup(const char * batchName)
 {
     file.setFileName(batchName);
@@ -273,6 +251,11 @@ void Client::fileSetup(const char * batchName)
     file.open(QIODevice::WriteOnly);
 }
 
+/**
+	A Qt slot that is called in case there is an error in establishing a connection to the server.
+	
+	@param socketError parameter passed by the Qt framework that specifies the type of the error occured
+*/
 void Client::displayError(QAbstractSocket::SocketError socketError)
 {
     switch (socketError) {
@@ -291,6 +274,13 @@ void Client::displayError(QAbstractSocket::SocketError socketError)
 }
 
 
+/**
+	Removes the entire directory which contains the contents of the received page bundle.
+	This directory contains multiple subdirectories where the actual web objects reside.
+	
+	@param dirName Absolute path for the directory that holds the contents of the bundle.
+	@return Whether remove directory was performed successfully
+*/
 bool Client::removeDir(const QString &dirName)
 {
     bool result = true;

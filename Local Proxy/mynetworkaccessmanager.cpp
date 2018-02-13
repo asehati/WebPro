@@ -1,3 +1,13 @@
+/**
+    A customized network access manager class. Implementing this class enables  
+    local proxy to serve most objects from cache. Those objects that are missing
+	in the bundle (cache) will be fetched directly from remote servers.
+    Implementing this class also enables proxy to avoid loading advertisement urls
+	
+    @author Ali Sehati
+    @version 1.1
+*/
+
 #include "myNetworkAccessManager.h"
 
 MyNetworkAccessManager::MyNetworkAccessManager(QObject *parent) :
@@ -5,6 +15,10 @@ MyNetworkAccessManager::MyNetworkAccessManager(QObject *parent) :
 {
 }
 
+/**
+	Over-riding this method allows us to customize the HTTP request that will be issued 
+	by the local proxy. This customization includes prefering load from cache and also blocking Ad urls
+*/
 QNetworkReply *MyNetworkAccessManager::createRequest(QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *outgoingData)
 {
     QNetworkRequest myReq = QNetworkRequest(req);
@@ -24,6 +38,12 @@ QNetworkReply *MyNetworkAccessManager::createRequest(QNetworkAccessManager::Oper
     }
 }
 
+/**
+	Checks whether the provided url belongs to the black list of advertisement websites
+	
+	@param url url of the HTTP request to be issued by the local proxy
+	@return A boolean value indicating whether the url is for advertisement purposes
+*/
 bool MyNetworkAccessManager::isAdUrl(QUrl url)
 {
 
