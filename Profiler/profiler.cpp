@@ -1,7 +1,7 @@
 /**
-	Profiler class which is used for visiting a webpage and 
-	recording its resource list in a metadata repository
-	
+    Profiler class which is used for visiting a webpage and 
+    recording its resource list in a metadata repository
+    
     @author Ali Sehati
     @version 1.1
 */
