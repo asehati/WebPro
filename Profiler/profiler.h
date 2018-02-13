@@ -1,8 +1,15 @@
+/**
+	Profiler class which is used for visiting a webpage and \
+	recording its resource list in a metadata repository
+	
+    @author Ali Sehati
+    @version 1.1
+*/
+
 #ifndef PROFILER_H
 #define PROFILER_H
 
 #include "mynetworkaccessmanager.h"
-
 #include <QApplication>
 #include <QObject>
 #include <QWebPage>
@@ -27,11 +34,8 @@ public:
 private:
     QWebPage webpage;
     QString url;
-//    int counter;
 
-//    QNetworkAccessManager *netAccess;
     MyNetworkAccessManager *myNetAccess;
-
     QNetworkDiskCache *diskCache;
 
     QFile listFile;
@@ -43,9 +47,6 @@ private:
     QFile countFile;
     QTextStream countOut;
 
-    int prevReqEnds;
-    int currentReqEnds;
-
     int imageNum;
     int jsNum;
     int cssNum;
@@ -54,8 +55,6 @@ private:
     bool done;
     QSet<QUrl> urlSet;
     QString dataDirectory;
-
-//    QTime timer;
 
     QString uniqueFileName(const QUrl &);
     void prepareLayout();

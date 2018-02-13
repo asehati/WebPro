@@ -1,14 +1,22 @@
-#include "profiler.h"
+/**
+	Profiler class which is used for visiting a webpage and 
+	recording its resource list in a metadata repository
+	
+    @author Ali Sehati
+    @version 1.1
+*/
 
+#include "profiler.h"
 
 Profiler::Profiler(QObject *parent)
         :QObject(parent)
 {
     done = false ;
     imageNum = jsNum = cssNum = otherNum = 0;
-    prevReqEnds = currentReqEnds = 0;
-//    counter = 0;
 
+	dataDirectory = "/home/asehati/Desktop/build-GraphFetcher-Desktop-Debug";
+    dataDirectory.append("/profiles/");
+	
     myNetAccess = new MyNetworkAccessManager(this);
 
     diskCache = new QNetworkDiskCache(this);
@@ -18,7 +26,8 @@ Profiler::Profiler(QObject *parent)
 
     webpage.setNetworkAccessManager(myNetAccess);
 
-    webpage.settings()->setIconDatabasePath(""); //disable icon database for favicons associated with websites
+	//disable icon database for favicons associated with websites
+    webpage.settings()->setIconDatabasePath(""); 
 
     QObject::connect(myNetAccess, SIGNAL(finished(QNetworkReply *)),
                      this, SLOT(replyFinished(QNetworkReply *)));
@@ -28,9 +37,6 @@ Profiler::Profiler(QObject *parent)
 
     urlSet.clear();
 
-    dataDirectory = "/home/asehati/Desktop/build-GraphFetcher-Desktop-Debug";
-    dataDirectory.append("/profiles/");
-
     statFile.setFileName("hitStatics.txt");
     statFile.open(QIODevice::Append);
 
@@ -38,13 +44,14 @@ Profiler::Profiler(QObject *parent)
     statOut.setRealNumberNotation(QTextStream::FixedNotation);
     statOut.setRealNumberPrecision(6);
 
+	prepareLayout();
+	
 #ifdef COUNTSTATISTICS
     countFile.setFileName("CountStatics.txt");
     countFile.open(QIODevice::Append);
 
     countOut.setDevice(&countFile);
 #endif
-    prepareLayout();
 }
 
 void Profiler::loadPage()
@@ -58,12 +65,17 @@ void Profiler::loadPage()
     webpage.mainFrame()->load(url);
 }
 
+/**
+	Sets the url that the profiler is going to vist its associated page.
+	Also creates a file with unique name to store the resource list of that page
+	
+	@param value the url to be visited by the profiler
+*/
 void Profiler::setUrl(const QString &value)
 {
     QString filePath = uniqueFileName(QUrl(value));
 
     listFile.setFileName(dataDirectory + filePath);
-//    listFile.setFileName("ObjectGaps.txt");
 
     if(listFile.exists())
         listFile.remove();
@@ -77,37 +89,16 @@ void Profiler::setUrl(const QString &value)
     qDebug() << "url: " << value << ", filePath: " << filePath;
 }
 
-
+/**
+	A Qt slot that is called every time the HTTP response for one object is received 
+	The program takes the URL of the received object and records it in the associated resource file
+	
+	@param reply contains the information associated with the completed HTTP request-response transaction
+*/
 void Profiler::replyFinished(QNetworkReply *reply)
 {
-//    counter++;
     if(done)
         return;
-
-    // determining the status code of the reply
-
-    /*QVariant statusCode = reply->attribute( QNetworkRequest::HttpStatusCodeAttribute );
-
-    if ( statusCode.isValid() )
-    {
-        int status = statusCode.toInt();
-        if ( status != 200 )
-       {
-           QString reason = reply->attribute( QNetworkRequest::HttpReasonPhraseAttribute ).toString();
-           qDebug() << "=====================>>> " << status << "reason: " << reason;
-       }
-    }*/
-
-    // determining the status code of the reply
-    /*currentReqEnds = QTime::currentTime().msecsSinceStartOfDay();
-
-    if(prevReqEnds != 0)
-    {
-        out << currentReqEnds - prevReqEnds << "\t";
-        out.flush();
-    }
-
-    prevReqEnds = currentReqEnds;*/
 
     QNetworkRequest req = reply->request();
     QUrl current_url = req.url();
@@ -116,11 +107,13 @@ void Profiler::replyFinished(QNetworkReply *reply)
     {
         if(!urlSet.contains(current_url))
         {
+			
 #ifdef COUNTSTATISTICS
-            // image/js/css counter
+            // count the number of objects of different types: image/js/css counter
             QVariant cVar = reply->header(QNetworkRequest::ContentTypeHeader);
             checkType(cVar);
 #endif
+
             out << current_url.toEncoded().constData() << "\n";
             out.flush();
         }
@@ -133,17 +126,15 @@ void Profiler::replyFinished(QNetworkReply *reply)
         qDebug() << current_url.toString() ;
     }
     else
-        qDebug() << "------------------- empty url ---------------------";
+        qDebug() << "----------- empty url ------------";
 
     reply->deleteLater();
-//    if(counter == 5)
-//    {
-//        out.flush();
-//        listFile.close();
-//        QApplication::exit(0);
-//    }
+
 }
 
+/**
+	A Qt slot that is called every time the entire page load is finished
+*/
 void Profiler::pageLoadFinished(bool k)
 {
     webpage.settings()->setAttribute(QWebSettings::JavascriptEnabled,false);
@@ -152,23 +143,24 @@ void Profiler::pageLoadFinished(bool k)
         return;
 
     done = true;
-
-//    qDebug() << " >> page loaded in: " << timer.elapsed();  
-
-    if (k)
-    {
-        qDebug() << "--------------------------------------------";
-    }
+  
 
 #ifdef  COUNTSTATISTICS
     printResults();
+	compareLists();
 #endif
-//    compareLists();
+
     out.flush();
     listFile.close();
     QApplication::exit(0);
 }
 
+/**
+	A function to check the type of the received object
+	and update the number of objects of that type
+	
+	@param qv contains the MIME type of the received object
+*/
 void Profiler::checkType(QVariant qv)
 {
     if (qv.isValid()) {
@@ -192,6 +184,9 @@ void Profiler::checkType(QVariant qv)
     }
 }
 
+/**
+	prints the number of objects of different types
+*/
 void Profiler::printResults()
 {
     qDebug() << "imgNum: " << imageNum;
@@ -203,6 +198,11 @@ void Profiler::printResults()
     countOut << this->url << "  &  " << imageNum << "  &  " << jsNum << "  &  " << cssNum << "  &  " << otherNum << "  &  " << urlSet.size() << "\n";
 }
 
+/**
+	A function to quantify amount of change in webpage structure since 
+	last visit by the profiler. It quantifis how much of the previously recorded 
+	resource list is still valid. This is not part of the normal behaviour of profiler.
+*/
 void Profiler::compareLists()
 {
     QList<QString> list2;
@@ -241,7 +241,6 @@ void Profiler::compareLists()
         if(list2.contains((*it).toString(QUrl::FullyEncoded)))
         {
             count++;
-//            qDebug() << (*it).toString(QUrl::FullyEncoded);
         }
     }
 
@@ -260,6 +259,9 @@ void Profiler::compareLists()
     urlSet.clear();    
 }
 
+/**
+	A function to create the root path and also subdirectories of 0-F
+*/
 void Profiler::prepareLayout()
 {
     QDir dir(dataDirectory);
@@ -281,7 +283,12 @@ void Profiler::prepareLayout()
     }
 }
 
-
+/**
+	A function to generate a unique file name from a given URL
+	
+	@param url the url to visit and create its resource file
+	@return name of the file that will hold the resource list of this url
+*/
 QString Profiler::uniqueFileName(const QUrl &url)
 {
     QUrl cleanUrl = url;
@@ -290,13 +297,14 @@ QString Profiler::uniqueFileName(const QUrl &url)
 
     QCryptographicHash hash(QCryptographicHash::Sha1);
     hash.addData(cleanUrl.toEncoded());
+	
     // convert sha1 to base36 form and return first 8 bytes for use as string
     QByteArray id =  QByteArray::number(*(qlonglong*)hash.result().data(), 36).left(8);
+	
     // generates <one-char subdir>/<8-char filname>
     uint code = (uint)id.at(id.length()-1) % 16;
     QString pathFragment = QString::number(code, 16) + QLatin1Char('/')
                              + QLatin1String(id);
 
-//    qDebug() << "Encoded Url is: " << pathFragment;
     return pathFragment;
 }

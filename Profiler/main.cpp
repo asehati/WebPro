@@ -1,3 +1,11 @@
+/**
+	A Simple driver for the Profiler
+	This program should be called with the target URL as its argument
+	
+    @author Ali Sehati
+    @version 1.1
+*/
+
 #include "profiler.h"
 #include <QStringList>
 

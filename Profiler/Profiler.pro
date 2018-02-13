@@ -1,4 +1,4 @@
-QT       += webkitwidgets network
+QT  += webkitwidgets network
 
 HEADERS += \
     profiler.h \
