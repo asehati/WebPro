@@ -1,1 +1,1 @@
-The bash script "Run_script" periodically calls profiler with a url from a list of popular pages in the network. The profiler then visits that page and stores its associated resource file in metadata repository
+The bash script "Run_script" periodically (every 1 hour) calls profiler with a url from a list of popular pages in the network. The profiler then visits that page and stores its associated resource list in metadata repository
