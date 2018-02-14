@@ -1,11 +1,11 @@
 QT   += webkitwidgets network
 HEADERS += \
-    Server_parser.h \
+    ServerParser.h \
     mynetworkaccessmanager.h
 
 SOURCES += \
     main.cpp \
-    Server_parser.cpp \
+    ServerParser.cpp \
     mynetworkaccessmanager.cpp
 
 

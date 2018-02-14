@@ -1,11 +1,19 @@
-#include "Server_parser.h"
+/**
+    The server program which employs a web-engine to load webpages
+    requested by the local proxy. After page load ends, the proxy packs all 
+    the objects in one bundle and sends it to the local proxy.
+    
+    @author Ali Sehati
+    @version 1.1
+*/
+
+#include "ServerParser.h"
 #include "mynetworkaccessmanager.h"
 
-Server_parser::Server_parser(QObject *parent) :
+ServerParser::ServerParser(QObject *parent) :
     QObject(parent)
 {
     done = false;
-    objCounter = 0;
 
     netAccess = new MyNetworkAccessManager();
     diskCache = new QNetworkDiskCache(this);
@@ -26,7 +34,11 @@ Server_parser::Server_parser(QObject *parent) :
                      this, SLOT(pageLoadFinished(bool)));
 }
 
-void Server_parser::startServer()
+/**
+	This method starts the server. The server listens at port PORT 
+	for requests coming from the client.
+*/
+void ServerParser::startServer()
 {
     tcpServer = new QTcpServer(this);
     QObject::connect(tcpServer, SIGNAL(newConnection()), this, SLOT(on_newConnection()));
@@ -35,15 +47,23 @@ void Server_parser::startServer()
         qDebug() << "Could not listen to port: " << PORT;
 }
 
-void Server_parser::setUrl(QString myUrl)
+/**
+	This method sets the url that was embedded in client's request.
+	
+	@param myUrl The url associated with client requested page
+*/
+void ServerParser::setUrl(QString myUrl)
 {
     url.setUrl(myUrl);
 }
 
-void Server_parser::on_newConnection()
+/**
+	A Qt slot that is called every time a new connection establishment  
+	request is received from client.
+*/
+void ServerParser::on_newConnection()
 {
-    done = false;
-    objCounter = 0;    
+    done = false;   
 
     clientConnection = tcpServer->nextPendingConnection();
     QObject::connect(clientConnection, SIGNAL(disconnected()),
@@ -54,7 +74,12 @@ void Server_parser::on_newConnection()
                      this, SLOT(on_disconnect()));
 }
 
-void Server_parser::readRequest()
+/**
+	A Qt slot that is called every time a request is received from client.
+	This method extracts URL from the request and loads the page associated 
+	with that URL.
+*/
+void ServerParser::readRequest()
 {
     if (clientConnection->canReadLine())
     {
@@ -69,7 +94,10 @@ void Server_parser::readRequest()
     }
 }
 
-void Server_parser::loadPage()
+/**
+	This method invokes the web-engine to load the page requested by client.
+*/
+void ServerParser::loadPage()
 {
     webpage.settings()->clearMemoryCaches();
     webpage.settings()->clearIconDatabase();
@@ -78,9 +106,16 @@ void Server_parser::loadPage()
     webpage.mainFrame()->load(url);
 }
 
-void Server_parser::replyFinished(QNetworkReply * reply)
+/**
+	A Qt slot that is called every time loading one object ends.
+	The main responsibility of this method is doing some memory management
+	and some logging tasks.
+	
+	@param reply An object provided by Qt framework that contains
+	the information associated with the received HTTP response.
+*/
+void ServerParser::replyFinished(QNetworkReply * reply)
 {
-    objCounter++;
     QNetworkRequest req = reply->request();
     QUrl current_url = req.url();
 
@@ -95,41 +130,47 @@ void Server_parser::replyFinished(QNetworkReply * reply)
         return;
     }
 
-    if (objCounter == 5)
-    {
-
-        buildTar();
-        sendBatch();
-        webpage.networkAccessManager()->clearAccessCache();
-    }
-
 }
 
-void Server_parser::on_disconnect()
+/**
+	A Qt slot that is called every time the connection with client is disconnected.
+*/
+void ServerParser::on_disconnect()
 {
     qDebug() << "--------- in disconnect ---------";
     clientConnection->deleteLater();
 }
 
-void Server_parser::pageLoadFinished(bool k)
+/**
+	A Qt slot that is called every time the page load is finished.
+	After page load ends, this method packs all the objects in one 
+	bundle and sends it to the local proxy.
+	
+	@param status Indicates whether page load was successful
+*/
+void ServerParser::pageLoadFinished(bool status)
 {
-//    webpage.settings()->setAttribute(QWebSettings::JavascriptEnabled,false);
+    webpage.settings()->setAttribute(QWebSettings::JavascriptEnabled,false);
 
-//    if(done)
-//        return;
+    if(done)
+        return;
 
-//     done = true;
+     done = true;
 
-    if (k)
+    if (status)
     {       
-        qDebug() << "-------------------------------" ;
+        qDebug() << "----------Page load was successfull----------" ;
     }
 
-//    buildTar();
-//    sendBatch();
+    buildTar();
+    sendBatch();
 }
 
-void Server_parser::buildTar()
+/**
+	This method packs all the objects (contents of the batch directory) 
+	in one tar file.
+*/
+void ServerParser::buildTar()
 {
     const char tarFilename[] = "batch.tar";
 
@@ -147,7 +188,10 @@ void Server_parser::buildTar()
     tar_close(pTar);
 }
 
-void Server_parser::sendBatch()
+/**
+	This method sends the page bundle to the client.
+*/
+void ServerParser::sendBatch()
 {
     QFile file("batch.tar");
     file.open(QIODevice::ReadOnly);

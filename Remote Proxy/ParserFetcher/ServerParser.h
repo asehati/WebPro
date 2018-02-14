@@ -1,3 +1,12 @@
+/**
+    The server program which employs a web-engine to load webpages
+    requested by the local proxy. After page load ends, the proxy packs all 
+    the objects in one bundle and sends it to the local proxy.
+    
+    @author Ali Sehati
+    @version 1.1
+*/
+
 #ifndef SERVER_PARSER_H
 #define SERVER_PARSER_H
 
@@ -12,11 +21,11 @@
 #include <QDebug>
 #define PORT 8801
 
-class Server_parser : public QObject
+class ServerParser : public QObject
 {
     Q_OBJECT
 public:
-    explicit Server_parser(QObject *parent = 0);
+    explicit ServerParser(QObject *parent = 0);
     void setUrl(QString url);
     void loadPage();
     void startServer();
@@ -24,7 +33,6 @@ public:
     void sendBatch();
 
 private:
-    int objCounter;
     QTcpServer *tcpServer;
     QTcpSocket *clientConnection;
     QWebPage webpage;
@@ -32,7 +40,6 @@ private:
     QNetworkAccessManager* netAccess;
     QNetworkDiskCache *diskCache;
     bool done;
-//    int reqNum;
 
 signals:
 

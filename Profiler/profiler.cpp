@@ -158,7 +158,7 @@ void Profiler::pageLoadFinished(bool status)
 }
 
 /**
-	A function to check the type of the received object
+	A method to check the type of the received object
 	and update the number of objects of that type
 	
 	@param qv contains the MIME type of the received object
@@ -201,7 +201,7 @@ void Profiler::printResults()
 }
 
 /**
-	A function to quantify amount of change in webpage structure since 
+	A method to quantify amount of change in webpage structure since 
 	last visit by the profiler. It quantifis how much of the previously recorded 
 	resource list is still valid. This is not part of the normal behaviour of profiler.
 */
@@ -262,7 +262,8 @@ void Profiler::compareLists()
 }
 
 /**
-	A function to create the root path and also subdirectories of 0-F
+	A metnod to create the root path and also subdirectories of 0-F
+	These directories will hold resource lists of webpages
 */
 void Profiler::prepareLayout()
 {
@@ -286,7 +287,7 @@ void Profiler::prepareLayout()
 }
 
 /**
-	A function to generate a unique file name from a given URL
+	A method to generate a unique file name from a given URL
 	
 	@param url the url to visit and create its resource file
 	@return name of the file that will hold the resource list of this url

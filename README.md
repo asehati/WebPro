@@ -4,3 +4,7 @@ To load a webpage, a web browser first downloads the base HTML file of the page 
 Local proxy resides in the mobile device, where the mobile browser is configured to use the local proxy for all of its network operations. After receiving the request to load a page, local proxy will forward the requested URL to the remote proxy, which is deployed in the backbone of the cellular network.
 
 Remote proxy is equipped with a profiler that builds an up-to-date database of resource lists for the websites visited frequently by network users. Given that the remote proxy resides in the wired part of the network, it can afford to pro-actively build and refresh the resource list database periodically. When a request for a webpage comes to the remote proxy, it simultaneously fetches the base HTML and all referenced objects required to render the webpage using the corresponding resource list stored in the local database. After fetching all the objects, the remote proxy packs them in a bundle and sends the bundle to the local proxy. After receiving the bundle at the mobile device, local proxy will serve all the browser's requests locally from objects in the bundle.
+
+Full technical details about WebPro can be found in the following two papers:
+1) A. Sehati and M. Ghaderi, "Network-Assisted Latency Reduction for Mobile Web Browsing," in Elsevier Computer Networks, vol. 106, pp. 134-150, Sept. 2016.
+2) A. Sehati and M. Ghaderi, "WebPro: A Proxy-Based Approach for Low Latency Web Browsing on Mobile Devices," in Proc. IEEE/ACM IWQoS 2015.

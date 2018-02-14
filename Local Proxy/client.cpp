@@ -104,7 +104,7 @@ void Client::connectToServer()
 }
 
 /**
-	A slot that is called every time a data is received from remote proxy.
+	A Qt slot that is called every time a data is received from remote proxy.
 	The first 4 bytes indicate the size of the bundle.
 	After receiving the entire bundle, it extracts the bundle and invokes 
 	web engine to load the page
@@ -226,8 +226,9 @@ void Client::extractTar(const char * batchName)
 }
 
 /**
-	The client proxy starts loading the page. Most objects will be served from the received bundle.
-	The ones missing in the bundle will be fetched from remote web servers
+	Starts loading the page associated with url at the client. Most objects will be served 
+	from the received bundle. The ones missing in the bundle will be fetched from remote
+	web servers.
 */
 void Client::loadPage()
 {
@@ -239,7 +240,7 @@ void Client::loadPage()
 }
 
 /**
-	Set up and open the batch file that will be used to write the received bundle from remote proxy
+	Sets up and opens the batch file that will be used to write the received bundle from remote proxy
 	"file" is the handle that will be used to work with this file
 	
 	@param batchName Name of the batch file that will hold the received page bundle
