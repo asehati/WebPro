@@ -2,13 +2,13 @@ QT       += webkitwidgets network
 
 HEADERS += \
     mynetworkaccessmanager.h \
-    Server_graph.h \
+    ServerGraph.h \
     networkaccessnuller.h
 
 SOURCES += \
     main.cpp \
     mynetworkaccessmanager.cpp \
-    Server_graph.cpp \
+    ServerGraph.cpp \
     networkaccessnuller.cpp
 
 

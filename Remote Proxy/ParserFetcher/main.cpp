@@ -6,7 +6,7 @@
 */
 
 #include <QApplication>
-#include "Server_parser.h"
+#include "ServerParser.h"
 
 int main(int argc, char *argv[])
 {

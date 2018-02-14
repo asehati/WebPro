@@ -17,7 +17,7 @@ QNetworkReply *MyNetworkAccessManager::createRequest(QNetworkAccessManager::Oper
     }
     else
     {
-        myReq.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::AlwaysNetwork);//QNetworkRequest::PreferCache
+        myReq.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::AlwaysNetwork);
         myReq.setAttribute(QNetworkRequest::CacheSaveControlAttribute, true);
         QNetworkReply * newResp = QNetworkAccessManager::createRequest(op, myReq, outgoingData);
         return newResp;

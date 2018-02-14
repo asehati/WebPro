@@ -1,3 +1,13 @@
+/**
+    The server program which employs previously recorded resource lists to 
+    load webpages requested by the local proxy. After page load ends,  
+    the proxy packs all the objects in one bundle and sends it to 
+	the local proxy.
+    
+    @author Ali Sehati
+    @version 1.1
+*/
+
 #ifndef SERVER_GRAPH_H
 #define SERVER_GRAPH_H
 
@@ -14,20 +24,19 @@
 #include "batchsender.h"
 #include <QTime>
 #define PORT 8801
-//#define MIX_APPROACH
 
 
-class Server_graph : public QObject
+
+class ServerGraph : public QObject
 {
     Q_OBJECT
 public:
-    explicit Server_graph(QObject *parent = 0);
+    explicit ServerGraph(QObject *parent = 0);
     void setUrl(QString url);
     void downloadObjects();
     void fetchObject(const QUrl &url);
     void buildTar(const char * batchName);
     void startServer();    
-
     void setRandListMissRatio(int value);
     void randListBuilder(int);
 
@@ -45,10 +54,8 @@ private:
     QList<QNetworkReply *> currentDownloads;
     QSet<int> randList;
     bool done;
-    int GraphSize;
     int reqNUm;
     int randListMissRatio;
-    QTime timer;
 
     QString uniqueFileName(const QUrl &);
     void loadPage();

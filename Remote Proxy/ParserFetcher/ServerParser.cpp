@@ -167,7 +167,7 @@ void ServerParser::pageLoadFinished(bool status)
 }
 
 /**
-	This method packs all the objects (contents of the batch directory) 
+	This method packs all the objects (contents of the "batch/" directory) 
 	in one tar file.
 */
 void ServerParser::buildTar()
@@ -189,7 +189,7 @@ void ServerParser::buildTar()
 }
 
 /**
-	This method sends the page bundle to the client.
+	This method sends the page bundle (batch.tar) to the client.
 */
 void ServerParser::sendBatch()
 {

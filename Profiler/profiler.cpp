@@ -54,19 +54,8 @@ Profiler::Profiler(QObject *parent)
 #endif
 }
 
-void Profiler::loadPage()
-{
-    diskCache->clear();
-
-    qDebug() << "==> " << diskCache->cacheSize();
-
-    webpage.settings()->clearMemoryCaches();
-
-    webpage.mainFrame()->load(url);
-}
-
 /**
-	Sets the url that the profiler is going to vist its associated page.
+	Sets the url that the profiler is going to visit its associated page.
 	Also creates a file with unique name to store the resource list of that page
 	
 	@param value the url to be visited by the profiler
@@ -87,6 +76,18 @@ void Profiler::setUrl(const QString &value)
     url = value;
 
     qDebug() << "url: " << value << ", filePath: " << filePath;
+}
+
+/**
+	This method invokes the web-engine to load the page associated with url.
+*/
+void Profiler::loadPage()
+{
+    diskCache->clear();
+
+    webpage.settings()->clearMemoryCaches();
+
+    webpage.mainFrame()->load(url);
 }
 
 /**
