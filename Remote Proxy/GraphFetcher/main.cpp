@@ -1,10 +1,10 @@
 /**
     A Simple driver for the ServerGraph.
-	By defining "MIX_APPROACH" this server will serve a random set of
+    By defining "MIX_APPROACH" this server will serve a random set of
     requests with web-engine and the rest of the requests with 
-	resource lists. In the case of "MIX_APPROACH", this program 
-	should be called with one argument. This argument represents 
-	the number of requests that should be served with the web-engine.
+    resource lists. In the case of "MIX_APPROACH", this program 
+    should be called with one argument. This argument represents 
+    the number of requests that should be served with the web-engine.
     
     @author Ali Sehati
     @version 1.1
