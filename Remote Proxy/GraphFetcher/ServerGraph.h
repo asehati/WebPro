@@ -21,7 +21,6 @@
 #include <QtNetwork>
 #include <QDebug>
 #include <QApplication>
-#include "batchsender.h"
 #include <QTime>
 #define PORT 8801
 

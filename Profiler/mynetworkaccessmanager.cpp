@@ -8,7 +8,6 @@
 */
 
 #include "mynetworkaccessmanager.h"
-#include "networkreplyproxy.h"
 
 MyNetworkAccessManager::MyNetworkAccessManager(QObject *parent) :
     QNetworkAccessManager(parent)

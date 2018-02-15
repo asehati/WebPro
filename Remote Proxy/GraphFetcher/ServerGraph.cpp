@@ -10,7 +10,6 @@
 
 #include "ServerGraph.h"
 #include "mynetworkaccessmanager.h"
-#include "networkaccessnuller.h"
 #include <QNetworkCacheMetaData>
 #define high 20
 
@@ -295,7 +294,9 @@ void ServerGraph::pageLoadFinished(bool status)
         qDebug() << "-----------page loaded successfully---------------";
     }
     else
+	{
         qDebug() << "-----------A problem in loading page---------------";
+	}
 
 
     buildTar("batch.tar"); 
