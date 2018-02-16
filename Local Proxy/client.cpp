@@ -1,17 +1,18 @@
+#include <QtNetwork>
+
+#include "client.h"
+
 /**
+    Class Client
+	
     The client program which implements local proxy.
     It forwards the first request to remote proxy, waits to receive the bundle from remote proxy,
     then serves all the subsequent requests from objects in the bundle. Missing objects in the bundle,
     are fetched directly from remote web-servers.
     
     @author Ali Sehati
-    @version 1.1
+    @version 1.0
 */
-
-#include <QtNetwork>
-
-#include "client.h"
-
 Client::Client(QObject *parent)
     :   QObject(parent)
 {

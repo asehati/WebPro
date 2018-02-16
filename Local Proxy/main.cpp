@@ -1,3 +1,7 @@
+#include <QApplication>
+#include <QStringList>
+#include "client.h"
+
 /**
     A Simple driver for the Client
     This program should be called with the target URL as its first argument.
@@ -5,13 +9,8 @@
     measurements.
     
     @author Ali Sehati
-    @version 1.1
+    @version 1.0
 */
-
-#include <QApplication>
-#include <QStringList>
-#include "client.h"
-
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);

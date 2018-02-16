@@ -1,13 +1,3 @@
-/**
-    The client program which implements local proxy.
-    It forwards the first request to remote proxy, waits to receive the bundle from remote proxy,
-    then serves all the subsequent requests from objects in the bundle. Missing objects in the bundle,
-    are fetched directly from remote web-servers.
-    
-    @author Ali Sehati
-    @version 1.1
-*/
-
 #ifndef CLIENT_H
 #define CLIENT_H
 
@@ -28,7 +18,17 @@ QT_BEGIN_NAMESPACE
 class QTcpSocket;
 QT_END_NAMESPACE
 
-//! [0]
+/**
+    Class Client
+	
+    The client program which implements local proxy.
+    It forwards the first request to remote proxy, waits to receive the bundle from remote proxy,
+    then serves all the subsequent requests from objects in the bundle. Missing objects in the bundle,
+    are fetched directly from remote web-servers.
+    
+    @author Ali Sehati
+    @version 1.0
+*/
 class Client : public QObject
 {
     Q_OBJECT
