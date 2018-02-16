@@ -1,14 +1,13 @@
+#include "profiler.h"
+#include <QStringList>
+
 /**
     A Simple driver for the Profiler
     This program should be called with the target URL as its argument
     
     @author Ali Sehati
-    @version 1.1
+    @version 1.0
 */
-
-#include "profiler.h"
-#include <QStringList>
-
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);

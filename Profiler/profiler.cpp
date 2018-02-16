@@ -1,13 +1,14 @@
+#include "profiler.h"
+
 /**
+    Class Profiler
+	
     Profiler class which is used for visiting a webpage and 
     recording its resource list in a metadata repository
     
     @author Ali Sehati
-    @version 1.1
+    @version 1.0
 */
-
-#include "profiler.h"
-
 Profiler::Profiler(QObject *parent)
         :QObject(parent)
 {

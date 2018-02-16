@@ -1,11 +1,3 @@
-/**
-    Profiler class which is used for visiting a webpage and \
-    recording its resource list in a metadata repository
-    
-    @author Ali Sehati
-    @version 1.1
-*/
-
 #ifndef PROFILER_H
 #define PROFILER_H
 
@@ -21,6 +13,15 @@
 #include <QtNetwork>
 #include <QDebug>
 
+/**
+    Class Profiler
+	
+    Profiler class which is used for visiting a webpage and \
+    recording its resource list in a metadata repository
+    
+    @author Ali Sehati
+    @version 1.0
+*/
 class Profiler : public QObject
 {
     Q_OBJECT
