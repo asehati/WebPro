@@ -1,3 +1,8 @@
+// uncomment the following line to use a mix of 
+// resource list and web-engine approaches
+//#define MIX_APPROACH
+#include "ServerGraph.h"
+
 /**
     A Simple driver for the ServerGraph.
     By defining "MIX_APPROACH" this server will serve a random set of
@@ -7,15 +12,8 @@
     the number of requests that should be served with the web-engine.
     
     @author Ali Sehati
-    @version 1.1
+    @version 1.0
 */
-
-// uncomment the following line to use a mix of 
-// resource list and web-engine approaches
-//#define MIX_APPROACH
-#include "ServerGraph.h"
-
-
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);

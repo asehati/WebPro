@@ -1,13 +1,12 @@
+#include <QApplication>
+#include "ServerParser.h"
+
 /**
     A Simple driver for the ServerParser
     
     @author Ali Sehati
-    @version 1.1
+    @version 1.0
 */
-
-#include <QApplication>
-#include "ServerParser.h"
-
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);

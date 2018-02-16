@@ -1,18 +1,19 @@
+#include "ServerGraph.h"
+#include "mynetworkaccessmanager.h"
+#include <QNetworkCacheMetaData>
+#define high 20
+
 /**
+	Class ServerGraph
+	
     The server program which employs previously recorded resource lists to 
     load webpages requested by the local proxy. After page load ends,  
     the proxy packs all the objects in one bundle and sends it to 
     the local proxy.
     
     @author Ali Sehati
-    @version 1.1
+    @version 1.0
 */
-
-#include "ServerGraph.h"
-#include "mynetworkaccessmanager.h"
-#include <QNetworkCacheMetaData>
-#define high 20
-
 ServerGraph::ServerGraph(QObject *parent) :
     QObject(parent)
 {

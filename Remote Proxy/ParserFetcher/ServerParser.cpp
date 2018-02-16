@@ -1,15 +1,16 @@
+#include "ServerParser.h"
+#include "mynetworkaccessmanager.h"
+
 /**
+    Class ServerParser
+	
     The server program which employs a web-engine to load webpages
     requested by the local proxy. After page load ends, the proxy packs all 
     the objects in one bundle and sends it to the local proxy.
     
     @author Ali Sehati
-    @version 1.1
+    @version 1.0
 */
-
-#include "ServerParser.h"
-#include "mynetworkaccessmanager.h"
-
 ServerParser::ServerParser(QObject *parent) :
     QObject(parent)
 {

@@ -1,12 +1,3 @@
-/**
-    The server program which employs a web-engine to load webpages
-    requested by the local proxy. After page load ends, the proxy packs all 
-    the objects in one bundle and sends it to the local proxy.
-    
-    @author Ali Sehati
-    @version 1.1
-*/
-
 #ifndef SERVER_PARSER_H
 #define SERVER_PARSER_H
 
@@ -21,6 +12,16 @@
 #include <QDebug>
 #define PORT 8801
 
+/**
+    Class ServerParser
+	
+    The server program which employs a web-engine to load webpages
+    requested by the local proxy. After page load ends, the proxy packs all 
+    the objects in one bundle and sends it to the local proxy.
+    
+    @author Ali Sehati
+    @version 1.0
+*/
 class ServerParser : public QObject
 {
     Q_OBJECT
